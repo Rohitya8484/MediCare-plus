@@ -81,6 +81,11 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 
+// Vercel routes the site root through this Express function.
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // --- 6. API ROUTES ---
 
 // ## ROUTE 1: BOOKING AN APPOINTMENT ##
