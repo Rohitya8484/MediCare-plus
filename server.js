@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const { promisify } = require('util'); // For making fs functions return promises
 
 // Promisify fs functions we will use
@@ -54,7 +55,10 @@ const reportSchema = new mongoose.Schema({
 const Report = mongoose.model('Report', reportSchema);
 
 // --- 4. FILE SYSTEM SETUP (for uploads) ---
-const uploadsDir = path.join(__dirname, 'uploads');
+// Vercel functions can only write temporary files under the system temp folder.
+const uploadsDir = process.env.VERCEL
+    ? path.join(os.tmpdir(), 'uploads')
+    : path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
 
 // CORRECTED: Configure Multer to save to the main 'uploads' directory first.
